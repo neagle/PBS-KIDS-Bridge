@@ -1,0 +1,90 @@
+#pbs_bridge_container {
+    background-color: #000;
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    text-align: left;
+    top: 0;
+    width: 100%;
+    z-index: 999999;
+}
+
+#pbs_bridge_outline {
+    background-color: #fff;
+    position: absolute;
+    z-index: 1000000;
+}
+
+#pbs_bridge {
+    font-family: Arial, Verdana, sans-serif;
+    padding: 1px;
+    position: absolute;
+    z-index: 1000001;
+}
+
+#pbs_bridge a {
+    cursor: pointer;
+}
+
+#pbs_bridge, #pbs_bridge_inner {
+    display: block;
+    font-family: Arial, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+#pbs_bridge p {
+    margin: 0 0 1em 0;
+}
+
+#pbs_bridge_inner a.bridge_link {
+    cursor: pointer;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+
+#pbs_bridge_inner {
+    font-size: 16px;
+    line-height: 1.4;
+    padding: 1px;
+    text-align: left;
+}
+
+#pbs_bridge a img {
+    border: 0;
+}
+
+#pbs_bridge_header, #pbs_bridge_close span {
+    background-image: url(http://soup.pbskids.org/images/bridge/sprite.gif);
+}
+
+/* Sprite specifics */
+
+#pbs_bridge_header {
+    background-position: 0 -92px;
+    height: 56px;
+    margin: 15px auto 0 auto;
+    text-indent: -9999px;
+    width: 280px;
+}
+
+#pbs_bridge_close {
+    bottom: 0;
+    height: 67px;
+    left: 15px;
+    position: absolute;
+    width: 55px;
+}
+
+#pbs_bridge_close span {
+    background-position: -213px 0;
+    display: block;
+    height: 67px;
+    position: absolute;
+    width: 55px;
+}

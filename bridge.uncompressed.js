@@ -27,8 +27,9 @@ PK.bridge = PK.bridge || {
     options: {
         border: 10,
         css: 'bridge.css', // Name of CSS file
+        // Eliminate color variables... these can and should be in the css.
         color: {
-            background: '#b3ce34',
+            background: '#B3CE34',
             border: '#fff',
             link: '#513F00',
             text: '#fff'
@@ -53,10 +54,13 @@ PK.bridge = PK.bridge || {
             });
         } else {
         // If the bridge does exist (post init), assign event listeners to dimmed out section and close button
+            // Dimmed out background should close bridge
             this.bridge.container.bind('click.bridge', function(event) {
-                if (event.target === that.bridge.container[0] || event.target === that.bridge.close.children('span')[0]) {
-                    that.burn();
-                }
+                that.burn();
+            });
+            // Close button should close bridge
+            this.bridge.close.bind('click.bridge', function(event) {
+                that.burn();
             });
 
             // $(window).bind('resize', that._position()).bind('scroll', that._position());
@@ -186,8 +190,11 @@ PK.bridge = PK.bridge || {
             linkText = title; 
         } else {
             // If no title attribute, concatenate href to use as link text
-            linkText = href.substring(0, this.options.titleHrefLength); 
-            if (href.length > this.options.titleHrefLength) { linkText += '&hellip;'; }
+            linkText = this.anchor.href;
+            linkText = linkText.split('http://');
+            linkText = linkText[linkText.length-1];
+            linkText = linkText.substring(0, this.options.titleHrefLength); 
+            if (linkText.length > this.options.titleHrefLength) { linkText += '&hellip;'; }
         }
 
         this.options.href = this.anchor.href,
@@ -211,17 +218,17 @@ PK.bridge = PK.bridge || {
             id: 'pbs_bridge_outline'
         }).css({
             background: that.options.color.border,
-            height: that.options.height,
+            // height: that.options.height,
             opacity: 0,
             padding: that.options.border,
             width: that.options.width
-        }).appendTo(this.bridge.container);
+        }).appendTo('body');
 
         this.bridge.bridge = $('<div />', {
             id: 'pbs_bridge'
         }).css({
             background: that.options.color.background,
-            height: that.options.height,
+            // height: that.options.height,
             width: that.options.width
         }).appendTo(this.bridge.outline);
 
@@ -237,7 +244,7 @@ PK.bridge = PK.bridge || {
         this.bridge.close = $('<a />', {
             id: 'pbs_bridge_close',
             title: 'Back to PBS KIDS',
-            html: '<span></span> Back'
+            text: 'Back'
         }).appendTo(this.bridge.inner);
 
         this.bridge.link = $('<a />', {
@@ -247,7 +254,12 @@ PK.bridge = PK.bridge || {
         }).appendTo(this.bridge.inner);
 
         // Call the template-specific creation code
-        this.templates[this.options.template]();
+        this.templates[this.options.template](that);
+
+        // Dynamically set height
+        this.bridge.outline.css({
+            height: that.bridge.bridge.css('height')
+        });
 
         this._position();
 
@@ -311,7 +323,8 @@ PK.bridge = PK.bridge || {
         that.bridge.container.unbind('click.bridge');
 
         this._hide(function() {
-            that.bridge.container.empty().remove();
+            that.bridge.container.remove();
+            that.bridge.outline.empty().remove();
             that.bridge = null;       
         });
     },
@@ -340,24 +353,44 @@ PK.bridge = PK.bridge || {
             }
         }
 
-        template = template || 'default';
+        template = template || 'generic';
 
         return template; 
     },
 
     // Specific template construction code
     templates: {
-        default: function() {
-            console.log('Default!');
+        generic: function() {
+            // console.log('Generic!');
         },
-        parents: function() {
-            console.log('Parents!');
+        parents: function(that) {
+            // console.log('Parents!');
+            that.bridge.sign = $('<a />', {
+                href: that.options.href,
+                id: 'pbs_bridge_sign',
+                title: 'Continue to PBS Parents'
+            }).appendTo(that.bridge.inner);
+
+            that.bridge.signLogo = $('<span />', {
+                id: 'pbs_bridge_parentsLogo',
+                'class': 'pbs_bridge_signLogo'
+            }).appendTo(that.bridge.sign);
         },
-        teachers: function() {
-            console.log('Teachers!');
+        teachers: function(that) {
+            // console.log('Teachers!');
+            that.bridge.sign = $('<a />', {
+                href: that.options.href,
+                id: 'pbs_bridge_sign',
+                title: 'Continue to PBS Teachers'
+            }).appendTo(that.bridge.inner);
+
+            that.bridge.signLogo = $('<span />', {
+                id: 'pbs_bridge_teachersLogo',
+                'class': 'pbs_bridge_signLogo'
+            }).appendTo(that.bridge.sign);
         },
-        sponsor: function() {
-            console.log('Sponsor!');
+        sponsor: function(that) {
+            // console.log('Sponsor!');
         }
     }
 

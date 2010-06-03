@@ -1,0 +1,5 @@
+h1. PBS KIDS Bridge
+
+h2. Version 2.0
+
+PBS KIDS Bridge modifies the behavior of all links on a webpage inside PBS KIDS. If the links point outside the PBS KIDS domain, the script creates a bridge overlay that informs the user that she is leaving PBS KIDS, and allows her to either return to the page she is on or continue to her destination.

@@ -27,6 +27,10 @@
     z-index: 1000001;
 }
 
+#pbs_bridge.feature {
+    background-color: #fff;
+}
+
 #pbs_bridge a#pbs_bridge_link {
     color: #516F00;
     cursor: pointer;
@@ -58,17 +62,23 @@
     border: 0;
 }
 
+#pbs_bridge_feature {
+    display: block;
+    margin: 0 0 15px;
+}
+
 
 /* Apply sprite background to everything that should be sprited! */
-#pbs_bridge_header, #pbs_bridge_close, #pbs_bridge_sign, #pbs_bridge .pbs_bridge_signLogo {
+#pbs_bridge_header, #pbs_bridge_x, #pbs_bridge_close, #pbs_bridge_sign, #pbs_bridge .pbs_bridge_signLogo {
     background-image: url(http://soup.pbskids.org/images/bridge/sprite.gif);
+    text-indent: -99999px;
 }
 
 /* Sprite specifics */
 
 #pbs_bridge_header {
     background-position: 0 -92px;
-    height: 56px;
+    height: 55px;
     margin: 15px auto 0 auto;
     text-indent: -9999px;
     width: 280px;
@@ -83,6 +93,23 @@
     left: 15px;
     position: absolute;
     width: 55px;
+}
+
+#pbs_bridge_close.feature {
+    background-position: 0 -147px;
+    height: 25px;
+    width: 213px; 
+}
+
+#pbs_bridge_x {
+    background-position: -213px -147px;
+    cursor: pointer;
+    display: block;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 24px;
 }
 
 #pbs_bridge_sign {

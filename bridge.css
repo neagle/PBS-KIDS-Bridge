@@ -1,12 +1,12 @@
 #pbs_bridge_container {
     background-color: #000;
     display: block;
-    height: 100%;
+    xheight: 100%;
     left: 0;
     position: absolute;
     text-align: left;
     top: 0;
-    width: 100%;
+    xwidth: 100%;
     z-index: 999999;
 }
 
@@ -64,7 +64,7 @@
 
 #pbs_bridge_feature {
     display: block;
-    margin: 0 0 15px;
+    margin: 20px 0 25px;
 }
 
 
@@ -89,10 +89,17 @@
     bottom: 0;
     cursor: pointer;
     display: block;
+    float: left;
     height: 67px;
     left: 15px;
     position: absolute;
     width: 55px;
+}
+
+/* For positioning purposes */
+#pbs_bridge_close.clone {
+    background-image: none;
+    position: relative;
 }
 
 #pbs_bridge_close.feature {
@@ -141,4 +148,21 @@
     height: 33px;
     left: 25px;
     top: 15px;
+}
+
+/* Sponsor */
+
+#pbs_bridge_sponsorText {
+    color: #fff;
+    font-size: 12px;
+    padding-top: 20px;
+}
+
+#pbs_bridge_sponsorText a {
+    display: block;
+    float: left;
+}
+
+#pbs_bridge_sponsorText a img {
+    display: block;
 }

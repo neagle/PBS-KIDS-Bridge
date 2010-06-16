@@ -10,18 +10,21 @@ PK.bridge = PK.bridge || {
     init: function(elem, settings) {
         var that = this;
         $.extend(this.options, settings);
-        this._addEventListeners();
+        this.addEventListeners();
 
-        /* Dynamically add stylesheet to head */
         $(document).ready(function() {
+            /*
             $('<link />', {
                 rel: 'stylesheet',
                 type: 'text/css',
                 href: that.options.css,
                 media: 'screen'
             }).appendTo('head');
+            */
+            // Dynamically add stylesheet to head
+            $('head').append('<link rel="stylesheet" type="text/css" href="' + that.options.css + '" media="screen">');
 
-            that._preloadImages();
+            that.preloadImages();
 
         });
     },
@@ -30,26 +33,26 @@ PK.bridge = PK.bridge || {
     options: {
         border: 10,
         css: 'bridge.css', // Name of CSS file
-        // Eliminate color variables... these can and should be in the css.
-        color: {
-            background: '#B3CE34',
-            border: '#fff',
-            link: '#513F00',
-            text: '#fff'
-        },
         dim: .8, // How dim (between 0 and 1) to make background
-        feature: {
-            width: 602
-        },
-        height: 210,
         image: '/images/bridge/sprite.gif', // “A sad tale's best for winter. I have one of sprites and goblins.”
         padding: 15,
         titleHrefLength: 20, // Number of characters at which to truncate the URL displayed in the absence of a title attribute
-        width: 370
+        width: 370,
+
+        
+        /* Feature-specific settings */
+        feature: {
+            width: 602
+        },
+
+        /* Sponsor-specific settings */
+        sponsor: {
+            width: 468
+        }
     },
 
     // Add event listeners to anchor and area tags
-    _addEventListeners: function() {
+    addEventListeners: function() {
         var that = this;
         // If the bridge does not exist (pre init) yet, assign event listeners to links (and image maps) on page
         if (this.bridge == null) {
@@ -74,17 +77,24 @@ PK.bridge = PK.bridge || {
                 that.burn();
             });
 
+            // Pressing 'esc' closes bridge
+            $(document).bind('keyup', function(event) {
+                if (event.keyCode == 27) {
+                    that.burn();
+                }
+            });
+
             $(window).bind('resize.bridge', function() {
-                that._position();
+                that.position();
             });
             $(window).bind('scroll.bridge', function() {
-                that._position();
+                that.position();
             });
         }
     },
 
     // Preload Sponsor and Feature Images so that they're ready to go
-    _preloadImages: function() {
+    preloadImages: function() {
         var that = this;
         PK.preloadedImages = [];
 
@@ -251,11 +261,11 @@ PK.bridge = PK.bridge || {
         this.options.href = this.anchor.href,
         this.options.linkText = linkText;
 
-        this._create();
-        this._reveal();
+        this.create();
+        this.reveal();
     },
     // Create & Place DOM Elements
-    _create: function() {
+    create: function() {
         var that = this;
 
 
@@ -264,20 +274,23 @@ PK.bridge = PK.bridge || {
 
         // Dynamically set height
         this.bridge.outline.css({
-            height: that.bridge.bridge.css('height')
+            height: that.bridge.bridge.height()
         });
+
+        // console.log(that.bridge.bridge.css('height'));
+        // console.log(that.bridge.bridge.height());
         
         // Store width and height
         that.bridge.width = that.bridge.bridge.width(); 
         that.bridge.height = that.bridge.bridge.height(); 
 
-        this._position();
+        this.position();
 
-        this._addEventListeners();
+        this.addEventListeners();
     },
     // Position (horizontally and vertically center) bridge
     // Contained in its own method so it can be called on window resize when overlay is active
-    _position: function() {
+    position: function() {
         var that = this,
             win = $(window),
             winHeight = win.height(),
@@ -290,7 +303,7 @@ PK.bridge = PK.bridge || {
     },
 
     // Reveal Bridge
-    _reveal: function() {
+    reveal: function() {
         var that = this;
         this.bridge.container.animate({
             opacity: this.options.dim
@@ -305,7 +318,7 @@ PK.bridge = PK.bridge || {
     },
     
     // Hide Bridge
-    _hide: function(callback) {
+    hide: function(callback) {
         var that = this;
         this.bridge.outline.animate({
             opacity: 0
@@ -336,7 +349,7 @@ PK.bridge = PK.bridge || {
 
         that.bridge.container.unbind('click.bridge');
 
-        this._hide(function() {
+        this.hide(function() {
             that.bridge.container.remove();
             that.bridge.outline.empty().remove();
             that.bridge = null;       
@@ -380,18 +393,19 @@ PK.bridge = PK.bridge || {
         generic: function() {
             // console.log('Generic!');
             var that = this;
+            var win = $(window);
 
             that.bridge.container = $('<div />', {
                 id: 'pbs_bridge_container'
             }).css({
-                opacity: 0
+                height: win.height(),
+                opacity: 0,
+                width: win.width()
             }).appendTo('body');
 
             that.bridge.outline = $('<div />', {
                 id: 'pbs_bridge_outline'
             }).css({
-                background: that.options.color.border,
-                // height: that.options.height,
                 opacity: 0,
                 padding: that.options.border,
                 width: that.options.width
@@ -400,7 +414,6 @@ PK.bridge = PK.bridge || {
             that.bridge.bridge = $('<div />', {
                 id: 'pbs_bridge'
             }).css({
-                // height: that.options.height,
                 width: that.options.width
             }).appendTo(that.bridge.outline);
 
@@ -416,13 +429,16 @@ PK.bridge = PK.bridge || {
             that.bridge.close = $('<a />', {
                 id: 'pbs_bridge_close',
                 title: 'Back to PBS KIDS',
-                text: 'Back'
-            }).appendTo(that.bridge.inner);
+                text: 'Back',
+                tabindex: 2
+            }).appendTo(that.bridge.inner).clone().addClass('clone').appendTo(that.bridge.inner).css({
+            });
 
             that.bridge.link = $('<a />', {
                 id: 'pbs_bridge_link',
                 href: that.options.href,
-                html: 'Continue to ' + that.options.linkText + '&nbsp;&raquo;'
+                html: 'Continue to ' + that.options.linkText + '&nbsp;&raquo;',
+                tabindex: 1
             }).appendTo(that.bridge.inner);
 
         },
@@ -465,21 +481,53 @@ PK.bridge = PK.bridge || {
         sponsor: function() {
             // console.log('Sponsor!');
             var that = this;
+
+            // Temporarily change the width to the setting for sponsors
+            var originalWidth = that.options.width;
+            that.options.width = that.options.sponsor.width;
+
+            // Use the generic template to begin
+            that.templates.generic.call(this);
+
+            // Restore the generic width
+            that.options.width = originalWidth;
+
+            // Add the sponsor text
+            that.bridge.sponsorText = $('<p />', {
+                id: 'pbs_bridge_sponsorText',
+                text: that.anchor.rev
+            }).insertBefore(that.bridge.close);
+
+            // Add the sponsor image
+            that.bridge.sponsorImage = $('<a />', {
+                html: '<img src="' + that.anchor.rel + '" />'
+            }).prependTo(that.bridge.sponsorText);
+
+            // Margin/padding settings must be added dynamically in response to image width
+            that.bridge.sponsorImage.css({
+                'margin-left': -(that.bridge.sponsorImage.width() + that.options.padding)
+            });
+
+            that.bridge.sponsorText.css({
+                'padding-left': that.bridge.sponsorImage.width() + that.options.padding 
+            });
         },
         feature: function() {
             // console.log('Featured sponsor!');
             var that = this;
+            var win = $(window);
 
             that.bridge.container = $('<div />', {
                 id: 'pbs_bridge_container'
             }).css({
-                opacity: 0
+                height: win.height(),
+                opacity: 0,
+                width: win.width()
             }).appendTo('body');
 
             that.bridge.outline = $('<div />', {
                 id: 'pbs_bridge_outline'
             }).css({
-                background: that.options.color.border,
                 opacity: 0,
                 padding: that.options.border,
                 width: that.options.feature.width

@@ -55,10 +55,12 @@ PK.bridge = PK.bridge || {
     addEventListeners: function() {
         var that = this;
         // If the bridge does not exist (pre init) yet, assign event listeners to links (and image maps) on page
-        if (this.bridge == null) {
+        if (that.bridge == null) {
             $(document).ready(function() {
-                $('a, area').bind('click.bridge', function(event) {
-                    return that.test(event.target);
+                $('body').delegate('a, area', 'click.bridge', function(event) {
+                    if (that.bridge == null) {
+                        return that.test(event.target);
+                    }
                 });
             });
         } else {

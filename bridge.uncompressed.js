@@ -59,7 +59,9 @@ PK.bridge = PK.bridge || {
             $(document).ready(function() {
                 $('body').delegate('a, area', 'click.bridge', function(event) {
                     if (that.bridge == null) {
-                        return that.test(event.target);
+                        if (that.test(event.target) == false) {
+                            event.preventDefault();
+                        }
                     }
                 });
             });
